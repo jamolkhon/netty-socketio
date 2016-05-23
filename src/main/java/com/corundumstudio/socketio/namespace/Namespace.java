@@ -181,7 +181,7 @@ public class Namespace implements SocketIONamespace {
         allClients.remove(client.getSessionId());
 
         leave(getName(), client.getSessionId());
-        storeFactory.pubSubStore().publish(PubSubType.LEAVE, new JoinLeaveMessage(client.getSessionId(), getName(), getName()));
+        storeFactory.pubSubStore().publish(PubSubType.LEAVE.toString(), new JoinLeaveMessage(client.getSessionId(), getName(), getName()));
 
         for (String joinedRoom : joinedRooms) {
             leave(roomClients, joinedRoom, client.getSessionId());
@@ -204,7 +204,7 @@ public class Namespace implements SocketIONamespace {
 
     public void onConnect(SocketIOClient client) {
         join(getName(), client.getSessionId());
-        storeFactory.pubSubStore().publish(PubSubType.JOIN, new JoinLeaveMessage(client.getSessionId(), getName(), getName()));
+        storeFactory.pubSubStore().publish(PubSubType.JOIN.toString(), new JoinLeaveMessage(client.getSessionId(), getName(), getName()));
 
         try {
             for (ConnectListener listener : connectListeners) {
@@ -262,7 +262,7 @@ public class Namespace implements SocketIONamespace {
 
     public void joinRoom(String room, UUID sessionId) {
         join(room, sessionId);
-        storeFactory.pubSubStore().publish(PubSubType.JOIN, new JoinLeaveMessage(sessionId, room, getName()));
+        storeFactory.pubSubStore().publish(PubSubType.JOIN.toString(), new JoinLeaveMessage(sessionId, room, getName()));
     }
 
     public void dispatch(String room, Packet packet) {
@@ -297,7 +297,7 @@ public class Namespace implements SocketIONamespace {
 
     public void leaveRoom(String room, UUID sessionId) {
         leave(room, sessionId);
-        storeFactory.pubSubStore().publish(PubSubType.LEAVE, new JoinLeaveMessage(sessionId, room, getName()));
+        storeFactory.pubSubStore().publish(PubSubType.LEAVE.toString(), new JoinLeaveMessage(sessionId, room, getName()));
     }
 
     private <K, V> void leave(ConcurrentMap<K, Set<V>> map, K room, V sessionId) {

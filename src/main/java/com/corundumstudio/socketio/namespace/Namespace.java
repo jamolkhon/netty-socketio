@@ -105,7 +105,7 @@ public class Namespace implements SocketIONamespace {
         entry.addListener(listener);
         jsonSupport.addEventMapping(name, eventName, eventClass);
     }
-    
+
     @Override
     public void removeAllListeners(String eventName) {
         EventEntry<?> entry = eventListeners.remove(eventName);
@@ -177,7 +177,7 @@ public class Namespace implements SocketIONamespace {
     }
 
     public void onDisconnect(SocketIOClient client) {
-        Set<String> joinedRooms = client.getAllRooms();        
+        Set<String> joinedRooms = client.getAllRooms();
         allClients.remove(client.getSessionId());
 
         leave(getName(), client.getSessionId());
@@ -327,6 +327,12 @@ public class Namespace implements SocketIONamespace {
 
     public Set<String> getRooms() {
         return roomClients.keySet();
+    }
+
+    public boolean clientInRoom(UUID sessionId, String room) {
+        Set<UUID> clients = roomClients.get(room);
+        Set<String> rooms = clientRooms.get(sessionId);
+        return clients != null && clients.contains(sessionId) && rooms != null && rooms.contains(room);
     }
 
     public Iterable<SocketIOClient> getRoomClients(String room) {
